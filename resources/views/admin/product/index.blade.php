@@ -1,0 +1,60 @@
+@extends('layouts.admin')
+@section('content')
+<div class="row mt-3">
+    <div class="col-md-12">
+        @if (session('message'))
+        <div x-data="{show: true}" x-init="setTimeout(() => show = false, 3000)" x-show="show">
+            <div class="alert alert-success">
+                <h5>{{ session('message') }}</h5>
+            </div>
+        </div>
+        @endif
+        <div class="card">
+            <div class="card-header">
+                <h3>Product List
+                    <a href="{{ url('admin/product/create') }}" class="btn btn-outline-primary float-right">Add
+                        Product</a>
+                </h3>
+            </div>
+            <div class="card-body">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <th class="h5">Id</th>
+                        <th class="h5">Category_Id</th>
+                        <th class="h5">Name</th>
+                        <th class="h5">Price</th>
+                        <th class="h5">Quantity</th>
+                        <th class="h5">Status</th>
+                        <th class="h5">Edit</th>
+                        <th class="h5">Remove</th>
+                    </thead>
+                    <tbody>
+                        @forelse ($products as $product)
+                        <tr>
+                            <td>{{ $product->id }}</td>
+                            <td>{{ $product->category->name }}</td>
+                            <td>{{ $product->name }}</td>
+                            <td>{{ $product->selling_price }}</td>
+                            <td>{{ $product->quantity }}</td>
+                            <td>{{ $product->status == '1' ? 'Hidden' : 'Visible' }}</td>
+                            <td><a href="{{ url('admin/product/'.$product->id.'/edit') }}"
+                                    class="btn btn-sm btn-primary">Edit</a></td>
+                            <td><a href="{{ url('admin/product/'.$product->id.'/delete') }}" onclick="return confirm('Are you sure, you want to delete this data?')" class="btn btn-sm btn-danger">Delete</a></td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="8">
+                                No Product Available
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+                <div class="float-right">
+                    {{ $products->links() }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
